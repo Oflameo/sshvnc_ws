@@ -1,0 +1,26 @@
+---
+- hosts: "{{ hosts }}"
+  remote_user:  "{{ user }}"
+  become: True
+  tasks:
+    -  name: Patch System
+       apt: 
+          update_cache: yes
+          upgrade: safe
+    -  name: Install x11vnc package
+       apt:
+           name: x11vnc
+           state: present
+    -  name: Install x11vnc service
+       copy:
+           src: template/x11vnc.service
+           dest: /etc/systemd/system/x11vnc.service
+           owner: root
+           group: root
+           mode: 0755
+    -  name: Start and Enable x11vnc service
+       service:
+           name: x11vnc
+           state: started
+           enabled: yes
+
