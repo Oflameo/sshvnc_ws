@@ -1,0 +1,23 @@
+---
+- hosts: "{{ hosts }}"
+  remote_user:  "{{ user }}"
+  become: True
+  tasks:
+    -  name: Patch System
+       apt: 
+          update_cache: yes
+          upgrade: safe
+    -  name: Install x11vnc package
+       apt:
+           name: x11vnc
+           state: present
+    -  name: Stop and Disable x11vnc service
+       service:
+           name: x11vnc
+           state: stopped
+           enabled: no
+    -  name: Remove x11vnc service
+       file:
+           dest: /etc/systemd/system/x11vnc.service
+           state: absent
+ 
